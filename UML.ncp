@@ -35,7 +35,7 @@
       <Entity type="Class">
         <Name>Party</Name>
         <Access>Public</Access>
-        <Location left="319" top="686" />
+        <Location left="1601" top="66" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -99,7 +99,7 @@
       <Entity type="Class">
         <Name>Relationship</Name>
         <Access>Public</Access>
-        <Location left="1634" top="88" />
+        <Location left="1321" top="50" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -108,6 +108,14 @@
         <Name>PlayerControls</Name>
         <Access>Public</Access>
         <Location left="1321" top="365" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>TroopStats</Name>
+        <Access>Public</Access>
+        <Location left="2296" top="88" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -158,6 +166,49 @@
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
+      <Relationship type="Dependency" first="6" second="13">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
     </Relationships>
+  </ProjectItem>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Relations</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>Troopstats</Name>
+        <Access>Public</Access>
+        <Location left="207" top="319" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Relationship</Name>
+        <Access>Public</Access>
+        <Location left="411" top="319" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>RelationshipManager</Name>
+        <Access>Public</Access>
+        <Location left="688" top="614" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Troopstats</Name>
+        <Access>Public</Access>
+        <Location left="613" top="319" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships />
   </ProjectItem>
 </Project>

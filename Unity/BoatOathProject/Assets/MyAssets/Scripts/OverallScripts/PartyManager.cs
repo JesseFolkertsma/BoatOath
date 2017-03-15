@@ -10,6 +10,14 @@ public class PartyManager : MonoBehaviour
 
     void Start()
     {
+        Party.onPlayerPartyAdd += relationManager.TroopAdded;
+        Party.onPlayerPartyRemove += relationManager.TroopRemoved;
         relationManager.PopulateRelationships(party);
+    }
+
+    void OnDestroy()
+    {
+        Party.onPlayerPartyAdd -= relationManager.TroopAdded;
+        Party.onPlayerPartyRemove -= relationManager.TroopRemoved;
     }
 }

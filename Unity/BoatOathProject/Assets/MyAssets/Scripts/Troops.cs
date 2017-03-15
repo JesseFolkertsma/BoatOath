@@ -51,10 +51,11 @@ namespace TroopManagement
     public class Party
     {
         public List<TroopStats> members;
-        
-        public delegate void OnPartyChange(Party _changedParty);
 
-        public static event OnPartyChange onPlayerPartyChange;
+        public delegate void OnPartyAdded(Party _changedParty, TroopStats _added);
+        public static event OnPartyAdded onPlayerPartyAdd;
+        public delegate void OnPartyRemoved(Party _changedParty, TroopStats _removed);
+        public static event OnPartyRemoved onPlayerPartyRemove;
 
         public int TotalMembers
         {
@@ -78,8 +79,8 @@ namespace TroopManagement
             }
             _newMemberStats.troopName = _memberName;
             members.Add(_newMemberStats);
-            if(onPlayerPartyChange != null)
-                onPlayerPartyChange(this);
+            if(onPlayerPartyAdd != null)
+                onPlayerPartyAdd(this, _newMemberStats);
 
             #region ForSoldierList
             //switch (_type)
@@ -100,23 +101,25 @@ namespace TroopManagement
 
         public void RemoveMemberByName(string _memberToRemove)
         {
+            TroopStats _removed = null;
             foreach (TroopStats ts in members)
             {
                 if (ts.troopName == _memberToRemove)
                 {
+                    _removed = ts;
                     members.Remove(ts);
                     break;
                 }
             }
-            if (onPlayerPartyChange != null)
-                onPlayerPartyChange(this);
+            if (onPlayerPartyRemove != null && _removed != null)
+                onPlayerPartyRemove(this, _removed);
         }
 
         public void RemoveMember(TroopStats _memberToRemove)
         {
             members.Remove(_memberToRemove);
-            if (onPlayerPartyChange != null)
-                onPlayerPartyChange(this);
+            if (onPlayerPartyRemove != null && _memberToRemove != null)
+                onPlayerPartyRemove(this,_memberToRemove);
         }
     }
 
@@ -129,30 +132,74 @@ namespace TroopManagement
     [Serializable]
     public class Relationship
     {
-        public int relation = 0;
+        int relation = 0;
+        public int Relation
+        {
+            get
+            {
+                return relation;
+            }
+        }
+        public void ImproveRelation(int _amount)
+        {
+            relation += _amount;
+        }
     }
 
     [Serializable]
     public class RelationshipManager
     {
-        public List<Relationship> relationships;
-
         public void PopulateRelationships(Party _party)
         {
             if (_party.members.Count > 0)
             {
                 foreach (TroopStats ts in _party.members)
                 {
+                    if (ts.relations == null)
+                        ts.relations = new Dictionary<TroopStats, Relationship>();
                     foreach (TroopStats ts2 in _party.members)
                     {
                         if (ts != ts2)
                         {
-                            if(ts.relations == null)
-                                ts.relations = new Dictionary<TroopStats, Relationship>();
+                            if(ts2.relations == null)
+                                ts2.relations = new Dictionary<TroopStats, Relationship>();
                             if (!ts.relations.ContainsKey(ts2))
-                                ts.relations.Add(ts2, new Relationship());
+                            {
+                                Relationship _newRe = new Relationship();
+                                ts.relations.Add(ts2, _newRe);
+                                ts2.relations.Add(ts, _newRe);
+                            }
                         }
                     }
+                }
+            }
+        }
+
+        public void TroopAdded(Party _party, TroopStats _addedTroop)
+        {
+            _addedTroop.relations = new Dictionary<TroopStats, Relationship>();
+            foreach(TroopStats ts in _party.members)
+            {
+                if(ts != _addedTroop)
+                {
+                    Relationship _newRe = new Relationship();
+                    ts.relations.Add(_addedTroop, _newRe);
+                    _addedTroop.relations.Add(ts, _newRe);
+                }
+            }
+        }
+
+        public void TroopRemoved(Party _party, TroopStats _removed)
+        {
+            foreach (TroopStats ts in _party.members)
+            {
+                if (ts != _removed)
+                {
+                    ts.relations.Remove(_removed);
+                }
+                else
+                {
+                    Debug.LogError("RelationshipManager: Removed troop is still in party?");
                 }
             }
         }
@@ -163,17 +210,12 @@ namespace TroopManagement
     {
         [Header("BaseTroop stats")]
         public string troopName = "New Troop";
-        [SerializeField]
-        TroopType type;
-        [SerializeField]
-        int health = 100;
-        [SerializeField]
-        int damage = 10;
-        [SerializeField]
-        float attackRange = 2f;
-        [SerializeField]
+        public TroopType type;
+        public int health = 100;
+        public int damage = 10;
+        public float attackRange = 2f;
         [Range(0, 100)]
-        int blockChance = 30;
+        public int blockChance = 30;
         public Dictionary<TroopStats, Relationship> relations = new Dictionary<TroopStats, Relationship>();
 
         public TroopStats(string _name, TroopType _type, int _hp, int _dmg, float _range, int _blockChance)
@@ -189,7 +231,6 @@ namespace TroopManagement
             else blockChance = _blockChance;
 
             relations = new Dictionary<TroopStats, Relationship>();
-            Debug.Log(relations);
         }
 
         public TroopStats(TroopType _type)
@@ -204,7 +245,6 @@ namespace TroopManagement
             blockChance = _newStats.blockChance;
 
             relations = new Dictionary<TroopStats, Relationship>();
-            Debug.Log(relations);
         }
 
         public TroopStats GetStatsForType(TroopType _type)

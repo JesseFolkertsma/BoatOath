@@ -2,26 +2,42 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerControls : MonoBehaviour {
+public class TravelModeControls : MonoBehaviour {
 
     [Header("Contoller Variables")]
     public float inputTime = .1f;
+    public bool canMove = true;
 
     [SerializeField] Camera cam;
     [SerializeField] PartyMapContoller party;
+    TravelModeManager tmManager;
 
     void Start()
     {
-        if(cam == null)
+        if (cam == null)
         {
             Debug.LogError("HEY DIPSHIT, CAM IS NIET SETUP!");
             enabled = false;
         }
+        tmManager = GetComponent<TravelModeManager>();
     }
 
     void Update()
     {
-        MouseInputs();
+        if (canMove)
+        {
+            MouseInputs();
+        }
+        KeyboardInputs();
+    }
+
+    void KeyboardInputs()
+    {
+        if (Input.GetButtonDown("Troopmenu"))
+        {
+            tmManager.ui.ActivateTroopMenu();
+        }
+        tmManager.ui.comparing = Input.GetButton("Compare");
     }
 
     float inputDelay = 0f;

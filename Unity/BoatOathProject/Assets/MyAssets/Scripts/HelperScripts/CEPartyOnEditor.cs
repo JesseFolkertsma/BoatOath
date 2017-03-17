@@ -19,5 +19,9 @@ public class CEPartyOnEditor : Editor {
         {
             myScript.RandomizeName();
         }
+        if (GUILayout.Button("Add Boat"))
+        {
+            myScript.AddBoat();
+        }
     }
 }

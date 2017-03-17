@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TroopManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -24,7 +25,7 @@ public class GameManager : MonoBehaviour {
         playerParty = FindObjectOfType<PartyManager>();
     }
 
-    public void EnterBattlemode()
+    public void EnterBattlemode(Party _target)
     {
 
     }

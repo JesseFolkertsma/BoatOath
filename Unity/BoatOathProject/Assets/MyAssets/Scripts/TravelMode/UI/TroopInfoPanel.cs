@@ -52,4 +52,18 @@ public class TroopInfoPanel : MonoBehaviour {
         _newString = "Name: " + _stats.troopName + "\n" + "Troop Type: " + _stats.type.ToString() + "\n" + "Max Health: " + _stats.health.ToString() + "\n" + "Damage: " + _stats.damage.ToString() + "\n" + "Block percentage: " + _stats.blockChance.ToString();
         return _newString;
     }
+
+    public void RemoveSelectedTroop()
+    {
+        if(troopStats != null)
+        {
+            GameManager.instance.playerParty.party.RemoveMember(troopStats);
+            text.text = "Removed " + troopStats.troopName + "!";
+            troopStats = null;
+        }
+        else
+        {
+            text.text = "No troop selected!";
+        }
+    }
 }

@@ -45,7 +45,7 @@ namespace TroopManagement
             _names.Add("Jesse");
             _names.Add("Jochem");
             _names.Add("Gerjohn");
-            _names.Add("Janniemanniepanniekanniemagniet");
+            _names.Add("Jan");
             #endregion
 
             return _names[UnityEngine.Random.Range(0,_names.Count)];

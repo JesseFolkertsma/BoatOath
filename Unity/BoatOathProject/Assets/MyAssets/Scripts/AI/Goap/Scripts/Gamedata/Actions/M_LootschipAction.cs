@@ -20,41 +20,25 @@ public class M_LootschipAction : GoapAction
     public override bool CheckProceduralPrecondition(GameObject _agent)
     {
         AIPartyManager[] ships = FindObjectsOfType<AIPartyManager>();
-        AIPartyManager closest = null;
-        float dist = 0;
+        GameObject closest = FindObjectOfType<PartyMapContoller>().gameObject;
+        targetShip = closest.GetComponent<PartyMapContoller>();
+        float dist = Vector3.Distance(transform.position, closest.transform.position);
 
         foreach (AIPartyManager s in ships)
         {
             if (s == GetComponent<AIPartyManager>()) continue;
-            if (closest == null)
+            float dist2 = Vector3.Distance(transform.position, s.transform.position);
+            if (dist > dist2)
             {
-                closest = s;
-                dist = Vector3.Distance(transform.position, s.transform.position);
-            }
-            else
-            {
-                float dist2 = Vector3.Distance(transform.position, s.transform.position);
-                if (dist > dist2)
-                {
-                    closest = s;
-                    dist = dist2;
-                }
+                closest = s.gameObject;
+                targetShip = s;
+                dist = dist2;
             }
         }
-        GameObject _player = FindObjectOfType<PartyMapContoller>().gameObject;
-        if (Vector3.Distance(transform.position, _player.transform.position) < Vector3.Distance(transform.position, closest.transform.position) || closest == null)
-        {
-            targetShip = _player.GetComponent<PartyMapContoller>();
-            target = _player;
-            return true;
-        }
-        if (closest != null)
-        {
-            targetShip = closest.GetComponent<AIPartyManager>();
-            target = closest.gameObject;
-        }
+        target = closest.gameObject;
 
-        return closest != null;
+        if (dist <= GetComponent<AIPartyManager>().spotRange) return true;
+        else return false;
     }
 
     public override bool IsDone()

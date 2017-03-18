@@ -11,6 +11,7 @@ public class AIPartyManager : MonoBehaviour, IEngageable, IGoap {
     
     [Header("AI Variables")]
     public float movementSpeed = .1f;
+    public float spotRange = 15f;
 
     public int troopCount
     {

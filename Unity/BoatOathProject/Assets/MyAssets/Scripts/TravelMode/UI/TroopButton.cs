@@ -17,6 +17,7 @@ public class TroopButton : MonoBehaviour {
         manager = _manager;
         stats = _stats;
         nameText.text = _stats.troopName;
+        image.sprite = _stats.sprite;
     }
 
     public void PressButton()

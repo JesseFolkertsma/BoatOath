@@ -33,11 +33,9 @@ public class TravelModeControls : MonoBehaviour {
 
     void KeyboardInputs()
     {
-        if (Input.GetButtonDown("Troopmenu"))
-        {
-            tmManager.ui.ActivateTroopMenu();
-        }
         tmManager.ui.comparing = Input.GetButton("Compare");
+        if (Input.GetButtonDown("Troopmenu")) tmManager.ui.ActivateTroopMenu();
+        if (Input.GetButtonDown("Save")) GameManager.instance.SaveGame();
     }
 
     float inputDelay = 0f;

@@ -14,6 +14,17 @@ namespace TroopManagement
             return _newName;
         }
 
+        public static string GenerateRandomBoatName()
+        {
+            List<string> _names = new List<string>();
+
+            _names.Add("De Kano");
+            _names.Add("Spetter");
+            _names.Add("Mooie Boot Jung!");
+
+            return _names[UnityEngine.Random.Range(0, _names.Count)];
+        }
+
         public static string GenerateRandomRaiderpartyName()
         {
             List<string> _names = new List<string>();
@@ -28,6 +39,17 @@ namespace TroopManagement
             #endregion
 
             return _names[UnityEngine.Random.Range(0, _names.Count)];
+        }
+
+        public static TroopType GetRandomTroopType()
+        {
+            int _rng = UnityEngine.Random.Range(0, Enum.GetNames(typeof(TroopType)).Length);
+            return (TroopType)_rng;
+        }
+        public static BoatType GetRandomBoatType()
+        {
+            int _rng = UnityEngine.Random.Range(0, Enum.GetNames(typeof(BoatType)).Length);
+            return (BoatType)_rng;
         }
 
         static string GetRandomFirstName()
@@ -107,14 +129,23 @@ namespace TroopManagement
     public class Party
     {
         public string partyName = "New party";
-        public List<TroopStats> members;
+        public List<TroopStats> members = new List<TroopStats>();
         Dictionary<string, int> nameDatabase = new Dictionary<string, int>();
-        public List<BoatStats> boats;
+        public List<BoatStats> boats = new List<BoatStats>();
 
         public delegate void OnPartyAdded(Party _changedParty, TroopStats _added);
         public static event OnPartyAdded onPlayerPartyAdd;
         public delegate void OnPartyRemoved(Party _changedParty, TroopStats _removed);
         public static event OnPartyRemoved onPlayerPartyRemove;
+
+        public Party(string _name)
+        {
+            partyName = _name;
+            AddRandomBoat();
+            AddRandomTroop();
+        }
+
+        public Party() { }
 
         public int TotalCapacity
         {
@@ -220,8 +251,21 @@ namespace TroopManagement
                 onPlayerPartyRemove(this,_memberToRemove);
         }
 
+        public void AddRandomTroop()
+        {
+            AddNewMember(TroopUtility.GenerateRandomName(), TroopUtility.GetRandomTroopType());
+        }
+
+        public void AddRandomBoat()
+        {
+            AddNewBoat(TroopUtility.GenerateRandomBoatName(), TroopUtility.GetRandomBoatType());
+        }
+
         int AddNameToDatabase(string _name)
         {
+            if(nameDatabase == null)
+                nameDatabase = new Dictionary<string, int>();
+
             if (nameDatabase.ContainsKey(_name))
             {
                 nameDatabase[_name]++;
@@ -235,12 +279,14 @@ namespace TroopManagement
         }
     }
 
+    [Serializable]
     public enum TroopType
     {
         RegularViking,
         Beserker
     };
 
+    [Serializable]
     public enum BoatType
     {
         TestBoat
@@ -261,6 +307,8 @@ namespace TroopManagement
         {
             relation += _amount;
         }
+
+        public Relationship() { }
     }
 
     [Serializable]
@@ -273,13 +321,13 @@ namespace TroopManagement
                 foreach (TroopStats ts in _party.members)
                 {
                     if (ts.relations == null)
-                        ts.relations = new Dictionary<TroopStats, Relationship>();
+                        ts.relations = new SerializableDictionary<TroopStats, Relationship>();
                     foreach (TroopStats ts2 in _party.members)
                     {
                         if (ts != ts2)
                         {
                             if(ts2.relations == null)
-                                ts2.relations = new Dictionary<TroopStats, Relationship>();
+                                ts2.relations = new SerializableDictionary<TroopStats, Relationship>();
                             if (!ts.relations.ContainsKey(ts2))
                             {
                                 Relationship _newRe = new Relationship();
@@ -299,7 +347,7 @@ namespace TroopManagement
 
         public void TroopAdded(Party _party, TroopStats _addedTroop)
         {
-            _addedTroop.relations = new Dictionary<TroopStats, Relationship>();
+            _addedTroop.relations = new SerializableDictionary<TroopStats, Relationship>();
             foreach(TroopStats ts in _party.members)
             {
                 if(ts != _addedTroop)
@@ -338,7 +386,10 @@ namespace TroopManagement
         public float attackRange = 2f;
         [Range(0, 100)]
         public int blockChance = 30;
-        public Dictionary<TroopStats, Relationship> relations = new Dictionary<TroopStats, Relationship>();
+        public Sprite sprite;
+        public SerializableDictionary<TroopStats, Relationship> relations = new SerializableDictionary<TroopStats, Relationship>();
+
+        public TroopStats() { }
 
         public TroopStats(string _name, TroopType _type, int _hp, int _dmg, float _range, int _blockChance)
         {
@@ -352,7 +403,9 @@ namespace TroopManagement
             else if (_blockChance < 0) blockChance = 0;
             else blockChance = _blockChance;
 
-            relations = new Dictionary<TroopStats, Relationship>();
+            sprite = Resources.Load<Sprite>(_type.ToString());
+
+            relations = new SerializableDictionary<TroopStats, Relationship>();
         }
 
         public TroopStats(TroopType _type)
@@ -366,7 +419,9 @@ namespace TroopManagement
             attackRange = _newStats.attackRange;
             blockChance = _newStats.blockChance;
 
-            relations = new Dictionary<TroopStats, Relationship>();
+            sprite = Resources.Load<Sprite>(_type.ToString());
+
+            relations = new SerializableDictionary<TroopStats, Relationship>();
         }
 
         public TroopStats GetStatsForType(TroopType _type)
@@ -404,6 +459,8 @@ namespace TroopManagement
         public float knots;
         public int health = 100;
         
+        public BoatStats() { }
+
         public BoatStats(string _name, BoatType _type, int _tCap, int _lCap, float _knots, int _hp)
         {
             boatName = _name;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TroopManagement;
 
+[System.Serializable]
 public class PartyManager : MonoBehaviour
 {
     public Party party;

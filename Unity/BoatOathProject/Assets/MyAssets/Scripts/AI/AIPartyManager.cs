@@ -5,6 +5,7 @@ using UnityEngine.AI;
 using TroopManagement;
 using System;
 
+[System.Serializable]
 [RequireComponent(typeof(GoapAgent))]
 public class AIPartyManager : MonoBehaviour, IEngageable, IGoap {
     public Party party;
@@ -33,7 +34,7 @@ public class AIPartyManager : MonoBehaviour, IEngageable, IGoap {
 
     public void Attack(Party _attacker)
     {
-        Debug.Log("Oh noes! I gots attacked by " + _attacker + "!");
+        Debug.Log("Oh noes! I gots attacked by " + _attacker.partyName + "!");
     }
 
     void OnMouseEnter()

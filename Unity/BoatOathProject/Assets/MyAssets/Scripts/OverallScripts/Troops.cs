@@ -587,6 +587,10 @@ namespace TroopManagement
                 {
                     fsm.PushState(moveToState);
                 }
+                else
+                {
+                    Debug.Log("Attack!");
+                }
             };
         }
 

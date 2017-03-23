@@ -458,7 +458,8 @@ namespace TroopManagement
         public int lootCapasity;
         public float knots;
         public int health = 100;
-        
+        public Sprite sprite;
+
         public BoatStats() { }
 
         public BoatStats(string _name, BoatType _type, int _tCap, int _lCap, float _knots, int _hp)
@@ -469,6 +470,7 @@ namespace TroopManagement
             lootCapasity = _lCap;
             knots = _knots;
             health = _hp;
+            sprite = Resources.Load<Sprite>(_type.ToString());
         }
 
         public BoatStats(BoatType _type)
@@ -481,6 +483,7 @@ namespace TroopManagement
             lootCapasity = _newStats.lootCapasity;
             knots = _newStats.knots;
             health = _newStats.health;
+            sprite = Resources.Load<Sprite>(_type.ToString());
         }
 
         public BoatStats GetStatsForType(BoatType _type)
@@ -506,16 +509,150 @@ namespace TroopManagement
 
     public abstract class BaseTroop : MonoBehaviour
     {
-        public TroopStats stats;
-
-        public void TryHit(float damage)
+        public enum Side
         {
+            Player,
+            Enemy1
+        };
 
+        public Side side = Side.Player;
+
+        public FSM fsm = new FSM();
+        FSM.FSMState sailState;
+        FSM.FSMState idleState;
+        FSM.FSMState moveToState;
+        FSM.FSMState tryKillState;
+        FSM.FSMState trySaveState;
+        public TroopStats stats;
+        public float currentHP;
+        public float speed = 2;
+        public BaseTroop target;
+        public List<BaseTroop> targettedBy;
+        public BattleBoat onBoat;
+
+        float distToTarget
+        {
+            get
+            {
+                if (target == null) return 0;
+                return Vector3.Distance(transform.position, target.transform.position);
+            }
         }
+        
+        public void BaseStart()
+        {
+            CreateSailState();
+            CreateIdleState();
+            CreateMoveToState();
+            CreateTryKillState();
+            CreateTrySaveState();
+            fsm.PushState(idleState);
+        }
+
+        void CreateSailState()
+        {
+            sailState = (fsm, gameObj) =>
+            {
+
+            };
+        }
+
+        void CreateIdleState()
+        {
+            idleState = (fsm, gameObj) =>
+            {
+                target = GetClosestEnemy(onBoat.troopsOnBoat);
+                if (target != null)
+                {
+                    Debug.Log(stats.troopName + ": I will kill " + target.stats.troopName);
+                    fsm.PopState();
+                    fsm.PushState(tryKillState);
+                    return;
+                }
+            };
+        }
+
+        void CreateTryKillState()
+        {
+            tryKillState = (fsm, gameObj) =>
+            {
+                if(target == null)
+                {
+                    Debug.LogError(stats.troopName + ": Trying to kill but no target!");
+                    fsm.PopState();
+                    fsm.PopState();
+                    fsm.PushState(idleState);
+                }
+                if(distToTarget > stats.attackRange)
+                {
+                    fsm.PushState(moveToState);
+                }
+            };
+        }
+
+        void CreateTrySaveState()
+        {
+            trySaveState = (fsm, gameObj) =>
+            {
+
+            };
+        }
+
+        void CreateMoveToState()
+        {
+            moveToState = (fsm, gameObj) =>
+            {
+                if (distToTarget > stats.attackRange)
+                    transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
+                else fsm.PopState();
+            };
+        }
+
+        BaseTroop GetClosestEnemy(List<BaseTroop> _troops)
+        {
+            BaseTroop _bt = null;
+            float _range = 0;
+
+            foreach (BaseTroop bt in _troops)
+            {
+                if (bt.side != side)
+                {
+                    if (target == null)
+                    {
+                        _bt = bt;
+                        _range = Vector3.Distance(transform.position, _bt.transform.position);
+                    }
+                    else
+                    {
+                        float _newRange = Vector3.Distance(transform.position, _bt.transform.position);
+                        if (_range < _newRange)
+                        {
+                            _bt = bt;
+                            _range = _newRange;
+                        }
+                    }
+                }
+            }
+
+            return _bt;
+        }
+
+        public bool TryHit(float _damage, BaseTroop _hitter)
+        {
+            int _rng = UnityEngine.Random.Range(0, 100);
+            if (_rng > stats.blockChance)
+            {
+                currentHP -= _damage;
+                return true;
+            }
+            else return false;
+        }
+
+        public virtual void AdrenalineAbility() { }
 
         public abstract void Attack();
 
-        public void MoveTowards()
+        public virtual void Move()
         {
 
         }

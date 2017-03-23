@@ -14,10 +14,11 @@ public class GameManager : MonoBehaviour {
         Battlemode = 3
     };
 
-    public GameState gameState = GameState.Travelmode;
-
     public static GameManager instance;
+
+    public GameState gameState = GameState.Travelmode;
     public PartyManager playerParty;
+    public Party compeditor;
     public XMLSaver saver = new XMLSaver();
 
     void Awake()
@@ -35,19 +36,15 @@ public class GameManager : MonoBehaviour {
 
     public void EnterBattlemode(Party _target)
     {
-        StartCoroutine(LoadBattleScene());
-    }
-
-    IEnumerator LoadBattleScene()
-    {
-        SceneManager.LoadScene("BattleScene", LoadSceneMode.Additive);
-        yield return new WaitForEndOfFrame();
-        SceneManager.SetActiveScene(SceneManager.GetSceneByName("BattleScene"));
+        compeditor = _target;
+        gameState = GameState.Battlemode;
+        SceneManager.LoadScene("BattleScene");
     }
 
     public void EnterTravelmode()
     {
-
+        gameState = GameState.Travelmode;
+        SceneManager.LoadScene("MapScene");
     }
 
     public void SaveGame()

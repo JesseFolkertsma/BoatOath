@@ -22,6 +22,9 @@ public class TroopButton : MonoBehaviour {
 
     public void PressButton()
     {
-        manager.troopInfoPanel.ShowInfo(stats, manager.comparing);
+        if(GameManager.instance.gameState == GameManager.GameState.Travelmode)
+            manager.troopInfoPanel.ShowInfo(stats, manager.comparing);
+        else if (GameManager.instance.gameState == GameManager.GameState.Battlemode) { }
+
     }
 }

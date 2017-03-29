@@ -20,11 +20,19 @@ public class BattleTroop : MonoBehaviour, IGoap
     public float moveSpeed = 1;
     public float attackSpeed;
 
+    [HideInInspector]
+    public Animator anim;
+
+    void Start()
+    {
+        anim = GetComponent<Animator>();
+    }
+
     public HashSet<KeyValuePair<string, object>> GetWorldState()
     {
         HashSet<KeyValuePair<string, object>> worldData = new HashSet<KeyValuePair<string, object>>();
 
-        worldData.Add(new KeyValuePair<string, object>("HasFood", false));
+        worldData.Add(new KeyValuePair<string, object>("HitEnemy", false));
 
         return worldData;
     }
@@ -33,20 +41,27 @@ public class BattleTroop : MonoBehaviour, IGoap
     {
         HashSet<KeyValuePair<string, object>> goal = new HashSet<KeyValuePair<string, object>>();
 
-        goal.Add(new KeyValuePair<string, object>("HasFood", true));
+        goal.Add(new KeyValuePair<string, object>("HitEnemy", true));
 
         return goal;
     }
 
     public bool MoveAgent(GoapAction nextAction)
     {
-        float step = moveSpeed * Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position, nextAction.target.transform.position, step);
-
         if (Vector3.Distance(transform.position, nextAction.target.transform.position) < nextAction.ReachDistance())
+        {
+            nextAction.SetInRange(true);
             return true;
-        else return false;
+        }
+        else
+        {
+            float step = moveSpeed * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, nextAction.target.transform.position, step);
+            return false;
+        }
     }
+
+    #region Prettyprints
 
     public void PlanFailed(HashSet<KeyValuePair<string, object>> failedGoal)
     {
@@ -67,4 +82,5 @@ public class BattleTroop : MonoBehaviour, IGoap
     {
         Debug.Log("<color=red>Plan Aborted</color> " + GoapAgent.PrettyPrint(aborter));
     }
+    #endregion
 }

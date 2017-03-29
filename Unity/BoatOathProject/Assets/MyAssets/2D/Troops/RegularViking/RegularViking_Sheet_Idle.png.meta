@@ -1,15 +1,13 @@
 fileFormatVersion: 2
-guid: 5c6cd6929a906084d9de8279d0b16781
-timeCreated: 1490194024
+guid: ff40cf2e6b6a185428d676eff7af77de
+timeCreated: 1490428654
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: RegularViking_Sheet_0
-    21300002: RegularViking_Sheet_1
-    21300004: RegularViking_Sheet_2
-    21300006: RegularViking_Sheet_3
-    21300008: RegularViking_Sheet_4
-    21300010: RegularViking_Sheet_5
+    21300000: RegularViking_Sheet_Idle_0
+    21300002: RegularViking_Sheet_Idle_1
+    21300004: RegularViking_Sheet_Idle_2
+    21300006: RegularViking_Sheet_Idle_3
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -57,7 +55,7 @@ TextureImporter:
   textureFormatSet: 0
   platformSettings:
   - buildTarget: DefaultTexturePlatform
-    maxTextureSize: 512
+    maxTextureSize: 1024
     textureFormat: -1
     textureCompression: 0
     compressionQuality: 50
@@ -65,7 +63,7 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Standalone
-    maxTextureSize: 512
+    maxTextureSize: 1024
     textureFormat: -1
     textureCompression: 0
     compressionQuality: 50
@@ -76,78 +74,52 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: RegularViking_Sheet_0
+      name: RegularViking_Sheet_Idle_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 64
-        width: 64
-        height: 64
+        y: 0
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: RegularViking_Sheet_1
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 64
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: RegularViking_Sheet_2
+      name: RegularViking_Sheet_Idle_1
       rect:
         serializedVersion: 2
         x: 128
-        y: 64
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: RegularViking_Sheet_3
-      rect:
-        serializedVersion: 2
-        x: 192
-        y: 64
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: RegularViking_Sheet_4
-      rect:
-        serializedVersion: 2
-        x: 0
         y: 0
-        width: 64
-        height: 64
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: RegularViking_Sheet_5
+      name: RegularViking_Sheet_Idle_2
       rect:
         serializedVersion: 2
-        x: 64
+        x: 256
         y: 0
-        width: 64
-        height: 64
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: RegularViking_Sheet_Idle_3
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

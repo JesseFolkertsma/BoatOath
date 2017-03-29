@@ -6,9 +6,21 @@ public class B_AttackAction : GoapAction {
 
     bool hit = false;
     BattleTroop targetTroop = null;
+    BattleTroop thisTroop = null;
+
+    [SerializeField]
+    bool hasStarted = false;
+    bool attacked = false;
 
     float startTime = 0;
-    public float harvestDuration = 2;
+    float attackSpeed = 1;
+
+    void Start()
+    {
+        reachDistance = GetComponent<BattleTroop>().stats.attackRange;
+        thisTroop = GetComponent<BattleTroop>();
+        //attackSpeed = thisTroop.stats.a
+    }
 
     public B_AttackAction()
     {
@@ -18,22 +30,28 @@ public class B_AttackAction : GoapAction {
     public override bool CheckProceduralPrecondition(GameObject _agent)
     {
         BattleTroop[] troops = FindObjectsOfType<BattleTroop>();
-        GameObject closest = FindObjectOfType<PartyMapContoller>().gameObject;
-        float dist = Vector3.Distance(transform.position, closest.transform.position);
+        BattleTroop closest = null;
+        float dist = 0;
 
         foreach (BattleTroop bt in troops)
         {
-            if (bt.side == GetComponent<BattleTroop>().side) continue;
+            if (bt.side == thisTroop.side) continue;
             float dist2 = Vector3.Distance(transform.position, bt.transform.position);
-            if (dist > dist2)
+            if(closest == null)
             {
-                closest = bt.gameObject;
+                closest = bt;
+                dist = dist2;
+            }
+            else if (dist > dist2)
+            {
+                closest = bt;
                 targetTroop = bt;
                 dist = dist2;
             }
         }
-        target = closest.gameObject;
 
+        if(closest != null) target = closest.gameObject;
+        
         return closest != null;
     }
 
@@ -44,14 +62,24 @@ public class B_AttackAction : GoapAction {
 
     public override bool Preform(GameObject _agent)
     {
-        if (startTime == 0)
-            startTime = Time.time;
-
-        if (Time.time - startTime > harvestDuration)
+        if (!hasStarted)
         {
-            hit = true;
+            hasStarted = true;
+            thisTroop.anim.SetTrigger("Attack");
+        }
+        if (attacked)
+        {
+            if (startTime == 0)
+                startTime = Time.time + attackSpeed;
+            if (Time.time > startTime)
+                hit = true;
         }
         return true;
+    }
+
+    public void Attacked()
+    {
+        attacked = true;
     }
 
     public override bool RequiresInRange()
@@ -63,6 +91,8 @@ public class B_AttackAction : GoapAction {
     {
         hit = false;
         targetTroop = null;
+        hasStarted = false;
+        attacked = false;
         startTime = 0;
     }
 }

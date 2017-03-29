@@ -431,10 +431,10 @@ namespace TroopManagement
             switch (_type)
             {
                 case TroopType.RegularViking:
-                    _newStats = new TroopStats("NewRegularViking", TroopType.RegularViking, 100, 10, 1, 40);
+                    _newStats = new TroopStats("NewRegularViking", TroopType.RegularViking, 100, 10, .4f, 40);
                     break;
                 case TroopType.Beserker:
-                    _newStats = new TroopStats("NewBeserker", TroopType.Beserker, 80, 25, 1, 10);
+                    _newStats = new TroopStats("NewBeserker", TroopType.Beserker, 80, 25, .6f, 10);
                     break;
             }
 
